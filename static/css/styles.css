@@ -1,0 +1,27 @@
+/* Mejorar la responsividad */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+        box-shadow: none;
+    }
+}
+
+/* Estilo para botones interactivos */
+button[type="submit"]:hover {
+    background-color: #0056b3; /* Cambia el color de fondo al pasar el ratón */
+    border-color: #0056b3; /* Cambia el color del borde al pasar el ratón */
+    color: white; /* Cambia el color del texto al pasar el ratón */
+}
+
+/* Mejorar la visibilidad del texto en campos de entrada */
+input[type="number"],
+input[type="range"] {
+    border-radius: 5px;
+    border: 1px solid #ccc; /* Borde suave para los campos de entrada */
+    padding: 10px;
+}
+
+/* Estilo para los labels de los campos de entrada */
+label {
+    font-weight: bold; /* Negrita para las etiquetas de los campos de entrada */
+}
