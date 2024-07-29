@@ -1,22 +1,43 @@
-<!--Liver Disease Predictor HTML-->
+<!-- Liver Disease Predictor HTML -->
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Meta tags for character set and viewport settings -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+    <!-- Bootstrap CSS for styling -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/superhero/bootstrap.min.css">
+    
+    <!-- Link to custom CSS file -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    
     <title>Liver Disease Prediction</title>
+    
+    <!-- jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Link to custom JS file -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </head>
 <body>
+    <!-- Main container for the content -->
     <div class="container mt-5">
-        <h1 class="mb-4 text-center">Liver Disease Prediction</h1>
+        <!-- Heading for the page -->
+        <div class="container">
+            <h1 class="text-center mb-4">Liver Disease Predictor</h1>
+            <p class="text-center mb-4">This tool is designed to estimate the likelihood of liver disease based on various health factors. Please note that this is a prediction tool with an accuracy of 91%. It should not be used as a definitive decision-maker or substitute for professional medical advice. Always consult a healthcare provider for an accurate diagnosis and treatment.</p>
+            <!-- Form and other content here -->
+        </div>
+        <!-- Form for collecting user input -->
         <form id="prediction-form">
+            <!-- Age input field -->
             <div class="form-group">
                 <label for="age">Age:</label>
                 <input type="number" class="form-control" id="age" name="age" required>
             </div>
+
+            <!-- Gender input field with radio buttons -->
             <div class="form-group">
                 <label for="gender">Gender:</label><br>
                 <div class="form-check form-check-inline">
@@ -28,14 +49,20 @@
                     <label class="form-check-label" for="female">Female</label>
                 </div>
             </div>
+            
+            <!-- BMI input field with range slider -->
             <div class="form-group">
                 <label for="bmi">BMI (Body Mass Index, range 15-40): <span id="bmi-value">27.5</span></label>
                 <input type="range" class="form-control-range" id="bmi" name="bmi" min="15" max="40" step="0.1" value="27.5" required>
             </div>
+
+            <!-- Alcohol Consumption input field -->
             <div class="form-group">
-                <label for="alcohol">Alcohol Consumption (units per week, 1 unit = 250ml beer):</label>
-                <input type="number" class="form-control" id="alcohol" name="alcohol" required>
+                <label for="alcoholconsumption">Alcohol Consumption (units per week, 1 unit = 250ml beer):</label>
+                <input type="number" class="form-control" id="alcoholconsumption" name="alcoholconsumption" required>
             </div>
+
+            <!-- Smoking input field with radio buttons -->
             <div class="form-group">
                 <label for="smoking">Smoking:</label><br>
                 <div class="form-check form-check-inline">
@@ -47,21 +74,25 @@
                     <label class="form-check-label" for="smokingNo">No</label>
                 </div>
             </div>
+
+            <!-- Genetic Risk input field with dropdown -->
             <div class="form-group">
-                <label for="genetic">Genetic Risk:</label><br>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="genetic" id="geneticYes" value="1" required>
-                    <label class="form-check-label" for="geneticYes">Yes</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="genetic" id="geneticNo" value="0" required>
-                    <label class="form-check-label" for="geneticNo">No</label>
-                </div>
+                <label for="geneticrisk">Genetic Risk:</label>
+                <select class="form-control" id="geneticrisk" name="geneticrisk" required>
+                    <option value="" disabled selected>Select Risk Level</option>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
             </div>
+            
+            <!-- Physical Activity input field with range slider -->
             <div class="form-group">
-                <label for="activity">Physical Activity (hours per week, range 0-10): <span id="activity-value">5</span></label>
-                <input type="range" class="form-control-range" id="activity" name="activity" min="0" max="10" step="1" value="5" required>
+                <label for="physicalactivity">Physical Activity (hours per week, range 0-10): <span id="activity-value">5</span></label>
+                <input type="range" class="form-control-range" id="physicalactivity" name="physicalactivity" min="0" max="10" step=".1" value="5" required>
             </div>
+
+            <!-- Diabetes input field with radio buttons -->
             <div class="form-group">
                 <label for="diabetes">Diabetes:</label><br>
                 <div class="form-check form-check-inline">
@@ -73,6 +104,8 @@
                     <label class="form-check-label" for="diabetesNo">No</label>
                 </div>
             </div>
+
+            <!-- Hypertension input field with radio buttons -->
             <div class="form-group">
                 <label for="hypertension">Hypertension:</label><br>
                 <div class="form-check form-check-inline">
@@ -84,16 +117,77 @@
                     <label class="form-check-label" for="hypertensionNo">No</label>
                 </div>
             </div>
+            
+            <!-- Liver Function Test input field with range slider -->
+            <div class="form-group">
+                <label for="liverfunctiontest">Liver Function Test (range 0-100): <span id="liverfunction-value">50</span></label>
+                <input type="range" class="form-control-range" id="liverfunctiontest" name="liverfunctiontest" min="0" max="100" step=".1" value="50" required>
+            </div>
+
+            <!-- Submit button -->
             <button type="submit" class="btn btn-primary">Predict</button>
         </form>
+
+        <!-- Container for displaying the prediction result -->
         <div id="result" class="mt-4">
             <h3>Prediction Results:</h3>
             <p id="prediction-result"></p>
         </div>
+
+        <!-- JavaScript for handling form interactions and AJAX requests -->
+        <script>
+            $(document).ready(function() {
+                // Update the BMI value display
+                $('#bmi').on('input', function() {
+                    $('#bmi-value').text($(this).val());
+                });
+
+                // Update the Physical Activity value display
+                $('#physicalactivity').on('input', function() {
+                    $('#activity-value').text($(this).val());
+                });
+
+                // Update the Liver Function Test value display
+                $('#liverfunctiontest').on('input', function() {
+                    $('#liverfunction-value').text($(this).val());
+                });
+
+                // Handle form submission
+                $('#prediction-form').on('submit', function(e) {
+                    e.preventDefault(); // Prevent the default form submission
+
+                    // Collect form data
+                    var formData = {
+                        age: $('#age').val(),
+                        gender: $('input[name="gender"]:checked').val(),
+                        bmi: $('#bmi').val(),
+                        alcoholconsumption: $('#alcoholconsumption').val(),
+                        smoking: $('input[name="smoking"]:checked').val(),
+                        geneticrisk: $('input[name="geneticrisk"]:checked').val(),
+                        physicalactivity: $('#physicalactivity').val(),
+                        diabetes: $('input[name="diabetes"]:checked').val(),
+                        hypertension: $('input[name="hypertension"]:checked').val(),
+                        liverfunctiontest: $('#liverfunctiontest').val()
+                    };
+
+                    // Send AJAX request
+                    $.ajax({
+                        url: '/predict', // Endpoint for prediction
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(formData),
+                        success: function(response) {
+                            // Display prediction result
+                            $('#prediction-result').text(`The prediction result is: ${response.prediction}`);
+                        },
+                        error: function(response) {
+                            // Display error message
+                            $('#prediction-result').text('An error occurred while making the prediction.');
+                        }
+                    });
+                });
+            });
+        </script>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
