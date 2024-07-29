@@ -136,7 +136,7 @@
 
         <!-- JavaScript for handling form interactions and AJAX requests -->
         <script>
-            $(document).ready(function() {
+            $(document).ready(function() { // document refers to the entire HTML document loaded into the browser
                 // Update the BMI value display
                 $('#bmi').on('input', function() {
                     $('#bmi-value').text($(this).val());
@@ -154,7 +154,7 @@
 
                 // Handle form submission
                 $('#prediction-form').on('submit', function(e) {
-                    e.preventDefault(); // Prevent the default form submission
+                    e.preventDefault(); // handle the form submission with JavaScript instead, instead of reloading the page
 
                     // Collect form data
                     var formData = {
@@ -170,18 +170,22 @@
                         liverfunctiontest: $('#liverfunctiontest').val()
                     };
 
-                    // Send AJAX request
+                    // Send AJAX request to the server for prediction
+                    // An AJAX request is a method for a web page to send and receive data from a server asynchronously (without reloading the whole page)
                     $.ajax({
-                        url: '/predict', // Endpoint for prediction
-                        method: 'POST',
-                        contentType: 'application/json',
-                        data: JSON.stringify(formData),
-                        success: function(response) {
-                            // Display prediction result
+                        url: '/predict', // The URL endpoint to which the AJAX request is sent. This is the route in your Flask app that handles prediction requests.
+                        method: 'POST', // HTTP method used for the request. 'POST' is used here because we are sending data to the server to get a prediction.
+                        contentType: 'application/json', // Specifies the format of the data being sent to the server. 'application/json' indicates that the data is in JSON format.
+                        data: JSON.stringify(formData), // Convert the form data object into a JSON string to be sent in the body of the request.
+                        success: function(response) { // Callback function executed if the AJAX request is successful.
+                            // `response` is the data returned by the server.
+                            // Update the HTML element with id 'prediction-result' to display the prediction result.
+                            // `response.prediction` contains the predicted value returned from the server.
                             $('#prediction-result').text(`The prediction result is: ${response.prediction}`);
                         },
-                        error: function(response) {
-                            // Display error message
+                        error: function(response) { // Callback function executed if there is an error with the AJAX request.
+                            // `response` contains information about the error that occurred.
+                            // Update the HTML element with id 'prediction-result' to display an error message.
                             $('#prediction-result').text('An error occurred while making the prediction.');
                         }
                     });

@@ -29,15 +29,19 @@ $(document).ready(function() {
 
         // Collect the form data into an object
         var formData = {
-            age: $('#age').val(), // Get the value from the age input field
-            gender: $('input[name="gender"]:checked').val(), // Get the selected value of the gender radio buttons
-            bmi: $('#bmi').val(), // Get the value from the BMI slider
-            alcoholconsumption: $('#alcoholconsumption').val(), // Get the value from the alcohol consumption input field
-            smoking: $('input[name="smoking"]:checked').val(), // Get the selected value of the smoking radio buttons
-            geneticrisk: $('input[name="geneticrisk"]:checked').val(), // Get the selected value of the genetic risk radio buttons
-            physicalactivity: $('#physicalactivity').val(), // Get the value from the physical activity slider
-            diabetes: $('input[name="diabetes"]:checked').val(), // Get the selected value of the diabetes radio buttons
-            hypertension: $('input[name="hypertension"]:checked').val(), // Get the selected value of the hypertension radio buttons
-            liverfunctiontest: $('#liverfunctiontest').val() // Get the value from the liver function test slider
+            age: parseInt($('#age').val(), 10), // Convert the value from the age input field to integer
+            gender: parseInt($('input[name="gender"]:checked').val(), 10), // Convert the selected value of the gender radio buttons to integer
+            bmi: parseFloat($('#bmi').val()), // Convert the value from the BMI slider to float
+            alcoholconsumption: parseFloat($('#alcoholconsumption').val()), // Convert the value from the alcohol consumption input field to float
+            smoking: parseInt($('input[name="smoking"]:checked').val(), 10), // Convert the selected value of the smoking radio buttons to integer
+            geneticrisk: parseInt($('input[name="geneticrisk"]:checked').val(), 10), // Convert the selected value of the genetic risk radio buttons to integer
+            physicalactivity: parseFloat($('#physicalactivity').val()), // Convert the value from the physical activity slider to float
+            diabetes: parseInt($('input[name="diabetes"]:checked').val(), 10), // Convert the selected value of the diabetes radio buttons to integer
+            hypertension: parseInt($('input[name="hypertension"]:checked').val(), 10), // Convert the selected value of the hypertension radio buttons to integer
+            liverfunctiontest: parseFloat($('#liverfunctiontest').val()) // Convert the value from the liver function test slider to float
         };
 
+        // For debugging, log the collected data to the console
+        console.log(formData);
+    });
+});

@@ -9,8 +9,8 @@ import numpy as np
 app = Flask(__name__, static_folder='static', template_folder='templates')
 
 # Load the machine learning model
-model_path = r'C:/Users/Daniel/Documents/BootCamp/Final Project/Proyecto 4/Proyecto_4_Liver_Disease/model_gbm.pkl'
-scaler_path = r'C:/Users/Daniel/Documents/BootCamp/Final Project/Proyecto 4/Proyecto_4_Liver_Disease/scaler_gbm.pkl'
+model_path = 'model_gbm.pkl'
+scaler_path = 'scaler_gbm.pkl'
 
 # Load the model
 with open(model_path, 'rb') as file:
@@ -46,7 +46,7 @@ def api():
 def predict():
     try:
         # Parse JSON data from the request
-        data = request.get_json()
+        data = request.get_json() # The request object in Flask provides access to the data sent by the client. 
         
         # Extract features from the data
         features = np.array([
@@ -66,7 +66,7 @@ def predict():
         scaled_features = scaler.transform(features)
         
         # Predict using the model
-        prediction = model.predict(scaled_features)[0]
+        prediction = model.predict(scaled_features)[0] # extract the first element from the prediction result
         
         # Return the prediction as JSON
         return jsonify({'prediction': int(prediction)})
