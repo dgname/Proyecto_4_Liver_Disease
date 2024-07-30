@@ -11,14 +11,20 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/superhero/bootstrap.min.css">
     
     <!-- Link to custom CSS file -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="/static/css/styles.css">
     
     <title>Liver Disease Prediction</title>
+
+    <!-- D3 Library -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     
     <!-- jQuery library -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Link to custom JS file -->
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+    <!-- Custom script -->
+    <!-- <script src="static/js/script.js"></script> -->
+
+
 </head>
 <body>
     <!-- Main container for the content -->
@@ -41,11 +47,11 @@
             <div class="form-group">
                 <label for="gender">Gender:</label><br>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="gender" id="male" value="1" required>
+                    <input class="form-check-input" type="radio" name="gender" id="male" value="0" required>
                     <label class="form-check-label" for="male">Male</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="gender" id="female" value="0" required>
+                    <input class="form-check-input" type="radio" name="gender" id="female" value="1" required>
                     <label class="form-check-label" for="female">Female</label>
                 </div>
             </div>
@@ -59,7 +65,7 @@
             <!-- Alcohol Consumption input field -->
             <div class="form-group">
                 <label for="alcoholconsumption">Alcohol Consumption (units per week, 1 unit = 250ml beer):</label>
-                <input type="number" class="form-control" id="alcoholconsumption" name="alcoholconsumption" required>
+                <input type="number" class="form-control" id="alcoholconsumption" step="any" name="alcoholconsumption" required>
             </div>
 
             <!-- Smoking input field with radio buttons -->
@@ -79,10 +85,10 @@
             <div class="form-group">
                 <label for="geneticrisk">Genetic Risk:</label>
                 <select class="form-control" id="geneticrisk" name="geneticrisk" required>
-                    <option value="" disabled selected>Select Risk Level</option>
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
+                    <!-- <option value="" disabled selected>Select Risk Level</option> -->
+                    <option value="0">Low</option>
+                    <option value="1">Medium</option>
+                    <option value="2">High</option>
                 </select>
             </div>
             
@@ -134,64 +140,60 @@
             <p id="prediction-result"></p>
         </div>
 
-        <!-- JavaScript for handling form interactions and AJAX requests -->
-        <script>
-            $(document).ready(function() { // document refers to the entire HTML document loaded into the browser
-                // Update the BMI value display
-                $('#bmi').on('input', function() {
-                    $('#bmi-value').text($(this).val());
-                });
+ <!-- JavaScript for handling form interactions with d3.js -->
 
-                // Update the Physical Activity value display
-                $('#physicalactivity').on('input', function() {
-                    $('#activity-value').text($(this).val());
-                });
+ <script>
+    document.addEventListener('DOMContentLoaded', function() { // This line makes sure the code runs only after the entire web page has loaded.
 
-                // Update the Liver Function Test value display
-                $('#liverfunctiontest').on('input', function() {
-                    $('#liverfunction-value').text($(this).val());
-                });
+        // Function to update the display of form values
+        function updateDisplay() {
+            d3.select('#bmi-value').text(d3.select('#bmi').property('value'));
+            d3.select('#activity-value').text(d3.select('#physicalactivity').property('value'));
+            d3.select('#liverfunction-value').text(d3.select('#liverfunctiontest').property('value'));
+        }
 
-                // Handle form submission
-                $('#prediction-form').on('submit', function(e) {
-                    e.preventDefault(); // handle the form submission with JavaScript instead, instead of reloading the page
+        // Event listeners for form inputs
+        d3.select('#bmi').on('input', updateDisplay);
+        d3.select('#physicalactivity').on('input', updateDisplay);
+        d3.select('#liverfunctiontest').on('input', updateDisplay);
 
-                    // Collect form data
-                    var formData = {
-                        age: $('#age').val(),
-                        gender: $('input[name="gender"]:checked').val(),
-                        bmi: $('#bmi').val(),
-                        alcoholconsumption: $('#alcoholconsumption').val(),
-                        smoking: $('input[name="smoking"]:checked').val(),
-                        geneticrisk: $('input[name="geneticrisk"]:checked').val(),
-                        physicalactivity: $('#physicalactivity').val(),
-                        diabetes: $('input[name="diabetes"]:checked').val(),
-                        hypertension: $('input[name="hypertension"]:checked').val(),
-                        liverfunctiontest: $('#liverfunctiontest').val()
-                    };
+        // Sets the initial display values when the page first loads.
+        updateDisplay();
 
-                    // Send AJAX request to the server for prediction
-                    // An AJAX request is a method for a web page to send and receive data from a server asynchronously (without reloading the whole page)
-                    $.ajax({
-                        url: '/predict', // The URL endpoint to which the AJAX request is sent. This is the route in your Flask app that handles prediction requests.
-                        method: 'POST', // HTTP method used for the request. 'POST' is used here because we are sending data to the server to get a prediction.
-                        contentType: 'application/json', // Specifies the format of the data being sent to the server. 'application/json' indicates that the data is in JSON format.
-                        data: JSON.stringify(formData), // Convert the form data object into a JSON string to be sent in the body of the request.
-                        success: function(response) { // Callback function executed if the AJAX request is successful.
-                            // `response` is the data returned by the server.
-                            // Update the HTML element with id 'prediction-result' to display the prediction result.
-                            // `response.prediction` contains the predicted value returned from the server.
-                            $('#prediction-result').text(`The prediction result is: ${response.prediction}`);
-                        },
-                        error: function(response) { // Callback function executed if there is an error with the AJAX request.
-                            // `response` contains information about the error that occurred.
-                            // Update the HTML element with id 'prediction-result' to display an error message.
-                            $('#prediction-result').text('An error occurred while making the prediction.');
-                        }
-                    });
-                });
-            });
-        </script>
-    </div>
+
+        d3.json ("/predict", (data)=>console.log(data));
+
+        on submit como corro una funcion y como regreso la data
+
+
+        // // Handle form submission with D3
+        // d3.select("#prediction-form").on("submit", function(event) {
+        //     event.preventDefault(); // Prevent default form submission (which would cause the page to reload)
+
+        //     // Gather form data
+        //     const formData = new FormData(this);
+        //     const data = {};
+        //     formData.forEach((value, key) => data[key] = value);
+
+        //     // Send data to Flask using Fetch API
+        //     fetch('/predict', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/x-www-form-urlencoded'
+        //         },
+        //         body: new URLSearchParams(data).toString() // Convert the data object to URL-encoded string
+        //     })
+        //     .then(response => response.json())
+        //     .then(result => {
+        //         // Display the prediction result
+        //         d3.select("#prediction-result").text(`Prediction: ${result.prediction}`);
+        //     })
+        //     .catch(error => {
+        //         console.error('Error:', error);
+        //     });
+        // });
+    });
+</script>
+</div>
 </body>
 </html>
