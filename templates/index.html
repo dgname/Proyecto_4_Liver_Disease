@@ -3,27 +3,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Meta tags for character set and viewport settings -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Bootstrap CSS for styling -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/superhero/bootstrap.min.css">
-    
-    <!-- Link to custom CSS file -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="/static/css/styles.css">
-    
     <title>Liver Disease Prediction</title>
-
-    <!-- D3 Library -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    
-    <!-- jQuery library -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- Custom script -->
-    <!-- <script src="static/js/script.js"></script> -->
-
 
 </head>
 <body>
@@ -130,21 +118,35 @@
                 <input type="range" class="form-control-range" id="liverfunctiontest" name="liverfunctiontest" min="0" max="100" step=".1" value="50" required>
             </div>
 
-            <!-- Submit button -->
+            <!-- Button to trigger the modal -->
             <button type="submit" class="btn btn-primary">Predict</button>
         </form>
+    </div>
 
-        <!-- Container for displaying the prediction result -->
-        <div id="result" class="mt-4">
-            <h3>Prediction Results:</h3>
-            <p id="prediction-result"></p>
-        </div>
+                <!-- Modal Structure -->
+                <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="resultModalLabel">Prediction Result</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body" id="modalBody">
+                                <!-- Result content will be injected here -->
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
  <!-- JavaScript for handling form interactions with d3.js -->
 
  <script>
-    document.addEventListener('DOMContentLoaded', function() { // This line makes sure the code runs only after the entire web page has loaded.
-
+    document.addEventListener('DOMContentLoaded', function() {
         // Function to update the display of form values
         function updateDisplay() {
             d3.select('#bmi-value').text(d3.select('#bmi').property('value'));
@@ -157,41 +159,45 @@
         d3.select('#physicalactivity').on('input', updateDisplay);
         d3.select('#liverfunctiontest').on('input', updateDisplay);
 
-        // Sets the initial display values when the page first loads.
+        // Sets the initial display values when the page first loads
         updateDisplay();
 
+        // Handle form submission with D3
+        d3.select("#prediction-form").on("submit", function(event) {
+            event.preventDefault(); // Prevent default form submission
 
-        d3.json ("/predict", (data)=>console.log(data));
+            // Gather form data
+            const formData = new FormData(this);
+            const data = {};
+            formData.forEach((value, key) => data[key] = value);
 
-        on submit como corro una funcion y como regreso la data
+            // Send data to Flask using Fetch API
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams(data).toString() // Convert the data object to URL-encoded string
+            })
+            .then(response => response.json())
+            .then(result => {
+                // Display the prediction result
+                const message = result.prediction === 1 ? 'You are at risk of liver disease.' : 'You are not at risk of liver disease.';
+                d3.select("#modalBody").text(message);
+                // Trigger the modal to show
+                $('#resultModal').modal('show');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                d3.select("#modalBody").text('An error occurred. Please try again.');
+                $('#resultModal').modal('show');
+            });
+        });
 
-
-        // // Handle form submission with D3
-        // d3.select("#prediction-form").on("submit", function(event) {
-        //     event.preventDefault(); // Prevent default form submission (which would cause the page to reload)
-
-        //     // Gather form data
-        //     const formData = new FormData(this);
-        //     const data = {};
-        //     formData.forEach((value, key) => data[key] = value);
-
-        //     // Send data to Flask using Fetch API
-        //     fetch('/predict', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/x-www-form-urlencoded'
-        //         },
-        //         body: new URLSearchParams(data).toString() // Convert the data object to URL-encoded string
-        //     })
-        //     .then(response => response.json())
-        //     .then(result => {
-        //         // Display the prediction result
-        //         d3.select("#prediction-result").text(`Prediction: ${result.prediction}`);
-        //     })
-        //     .catch(error => {
-        //         console.error('Error:', error);
-        //     });
-        // });
+        // Ensure the modal can be closed with the close button
+        $('#resultModal').on('hidden.bs.modal', function (e) {
+            // Code to execute after the modal is closed, if needed
+        });
     });
 </script>
 </div>
