@@ -1,0 +1,61 @@
+/* General body styling */
+body {
+    background-color: #f8f9fa; /* Light background color */
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+/* Main container styling */
+.about-container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading styling */
+.about-heading {
+    font-size: 2.5em;
+    color: #007bff; /* Primary color */
+}
+
+/* Image styling */
+.about-image {
+    width: 250px;
+    height: 250px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Paragraph styling */
+.about-text {
+    font-size: 1.1em;
+    line-height: 1.6;
+}
+
+/* Lead paragraph styling */
+.about-lead {
+    font-weight: bold;
+    color: #28a745; /* Success color */
+    font-size: 2em; /* Adjust the size as needed */
+
+}
+
+/* Button styling */
+.about-button {
+    background-color: #28a745; /* Custom background color */
+    border-color: #28a745; /* Custom border color */
+    color: #fff; /* Text color */
+    font-size: 1.2em; /* Font size */
+    padding: 10px 20px; /* Padding */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s, border-color 0.3s; /* Smooth transition for hover effects */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.about-button:hover {
+    background-color: #218838; /* Background color on hover */
+    border-color: #1e7e34; /* Border color on hover */
+    color: #fff; /* Text color on hover */
+}

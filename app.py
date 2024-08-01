@@ -2,10 +2,8 @@ from flask import Flask, render_template, request, jsonify, url_for, redirect
 from config import CONNSTRING
 from sqlalchemy import create_engine
 import pandas as pd
-import pickle
 import numpy as np
 import joblib
-
 
 # Initialize Flask app
 app = Flask(__name__, static_folder='static', template_folder='templates')
@@ -13,13 +11,15 @@ app = Flask(__name__, static_folder='static', template_folder='templates')
 model = joblib.load('model_gbm.joblib')
 scaler = joblib.load('scaler_gbm.joblib')
 
-# Joblib
-
 # Database connection
 engine = create_engine(CONNSTRING)
 
 @app.route("/")
-def index():
+def take_me_to_about():
+    return render_template('about.html')
+
+@app.route("/index")
+def take_me_to_index():
     return render_template('index.html')
 
 @app.route('/api')
@@ -36,10 +36,6 @@ def api():
     
     # Convert DataFrame to JSON and return
     return dfgroup.to_json(orient='records')
-
-# Revisar form
-
-
 
 @app.route('/predict', methods=['GET', 'POST'])
 def predict():
