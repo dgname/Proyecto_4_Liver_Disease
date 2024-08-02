@@ -1,0 +1,5 @@
+# Ignore Python cache files
+__pycache__/
+
+# Ignore the untitled_project folder
+untitled_project/
