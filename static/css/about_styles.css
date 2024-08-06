@@ -1,7 +1,7 @@
 /* General body styling */
 body {
     background-color: #7596b9; /* Light blue background color */
-    background-image: url('/about_image/estetos.png'); /* URL to your background pattern image */
+    background-image: url('/static/about_image/estetos.png'); /* URL to your background pattern image */
     background-size: 5%; /* Smaller size to repeat the image many times */
     background-repeat: repeat; /* Repeat the pattern */
     font-family: 'Open Sans', sans-serif; /* Using 'Open Sans' with sans-serif fallback */
